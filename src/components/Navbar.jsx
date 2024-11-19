@@ -4,8 +4,8 @@ export class Navbar extends Component {
   render() {
     return (
       <nav className="p-4 w-full text-gray-600 bg-gray-300">
-        <div className="w-full flex justify-between items-center mx-auto">
-          <div className="flex items-center space-x-4">
+        <div className="w-full flex justify-center sm:justify-between items-center mx-auto">
+          <div className="flex items-center space-x-4 ">
             <a className="text-xl font-bold" href="/">
               {this.props.title}
             </a>

@@ -6,7 +6,7 @@ export class NewsItem extends Component {
   render() {
     let {title, desc,img,newsUrl} = this.props
     return (
-      <div className="ml-16 mt-16">
+      <div className="flex justify-center mt-16">
         <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <a href={newsUrl} target="_blank">
             <img
@@ -52,11 +52,11 @@ export class NewsItem extends Component {
     );
   }
 }
-NewsItem.propTypes = {
+/* NewsItem.propTypes = {
   title: PropTypes.string.isRequired,
   desc: PropTypes.string.isRequired,
   img: PropTypes.string.isRequired,
-};
+}; */
 
 export default NewsItem;
 

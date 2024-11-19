@@ -12,15 +12,49 @@ export class News extends Component {
     this.state = {
       articles: this.articles,
       loading: false,
+      page: 1,
     };
   }
   async componentDidMount() {
     let url =
-      "https://newsapi.org/v2/everything?q=tesla&from=2024-10-19&sortBy=publishedAt&apiKey=31ed162351bc4eaca239f08c62d57745";
+      "https://newsapi.org/v2/everything?q=tesla&from=2024-10-19&sortBy=publishedAt&apiKey=31ed162351bc4eaca239f08c62d57745&page=1&pageSize=20";
     let data = await fetch(url);
     let parsedData = await data.json();
-    this.setState({ articles: parsedData.articles });
+    this.setState({
+      articles: parsedData.articles,
+      totalResults: parsedData.totalResults,
+    });
   }
+  handlePrevClick = async () => {
+    let url = `https://newsapi.org/v2/everything?q=tesla&from=2024-10-19&sortBy=publishedAt&apiKey=31ed162351bc4eaca239f08c62d57745&page=${
+      this.state.page - 1
+    }&pageSize=20`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    this.setState({
+      page: this.state.page - 1,
+      articles: parsedData.articles,
+      totalResults: parsedData.totalResults,
+    });
+  };
+
+  handleNextClick = async () => {
+    if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / 20))) {
+      console.log("Next");
+    } else {
+      let url = `https://newsapi.org/v2/everything?q=tesla&from=2024-10-19&sortBy=publishedAt&apiKey=31ed162351bc4eaca239f08c62d57745&page=${
+        this.state.page + 1
+      }&pageSize=20`;
+      let data = await fetch(url);
+      let parsedData = await data.json();
+      this.setState({
+        page: this.state.page + 1,
+        articles: parsedData.articles,
+        totalResults: parsedData.totalResults,
+      });
+    }
+  };
+
   render() {
     return (
       <div
@@ -35,7 +69,7 @@ export class News extends Component {
           News Monkey - Top Headlines
         </h2>
         <div className="columns-1 md:columns-3 gap-4 space-y-4">
-          {this.state.articles.slice(0, 20).map((element) => (
+          {this.state.articles.map((element) => (
             <div className="break-inside-avoid m-auto" key={element.url}>
               <NewsItem
                 title={element.title ? element.title : ""}
@@ -45,6 +79,21 @@ export class News extends Component {
               />
             </div>
           ))}
+        </div>
+        <div className="w-[80vw] flex justify-between m-auto mt-8">
+          <button
+            disabled={this.state.page <= 1}
+            className="text-white bg-black p-4 rounded-2xl"
+            onClick={this.handlePrevClick}
+          >
+            &larr; Previous
+          </button>
+          <button
+            className="text-white bg-black p-4 rounded-2xl"
+            onClick={this.handleNextClick}
+          >
+            Next &rarr;
+          </button>
         </div>
       </div>
     );

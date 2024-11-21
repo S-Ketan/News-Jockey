@@ -2,13 +2,7 @@ import React, { Component } from 'react'
 import Navbar from './components/Navbar'
 import News from './components/News'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Technology from './components/categories/Technology';
-import Sports from './components/categories/Sports';
-import Science from './components/categories/Science';
-import Health from './components/categories/Health';
-import General from './components/categories/General';
-import Entertainment from './components/categories/Entertainment';
-import Business from './components/categories/Business';
+
 import About from './components/About';
 export class App extends Component {
   router = createBrowserRouter(
@@ -17,8 +11,8 @@ export class App extends Component {
         path: "/",
         element: (
           <div>
-            <Navbar title ="News Monkey" />
-            <News country="us" pagesize="10" category="sports"/>
+            <Navbar title ="News Jockey" />
+            <News key="home" country="us" pagesize="10"/>
           </div>
         ),
       },
@@ -26,8 +20,8 @@ export class App extends Component {
         path: "/business",
         element: (
           <div>
-            <Navbar title ="News Monkey" />
-            <Business />
+            <Navbar title ="News Jockey" />
+            <News key="business" country="us" pagesize="10" category="business"/>
           </div>
         ),
       },
@@ -35,8 +29,9 @@ export class App extends Component {
         path: "/entertainment",
         element: (
           <div>
-            <Navbar title ="News Monkey" />
-            <Entertainment />
+            <Navbar title ="News Jockey" />
+            <News key="entertainment" country="us" pagesize="10" category="entertainment"/>
+
           </div>
         ),
       },
@@ -44,8 +39,9 @@ export class App extends Component {
         path: "/general",
         element: (
           <div>
-            <Navbar title ="News Monkey" />
-            <General />
+            <Navbar title ="News Jockey" />
+            <News key="general" country="us" pagesize="10" category="general"/>
+
           </div>
         ),
       },
@@ -53,8 +49,9 @@ export class App extends Component {
         path: "/health",
         element: (
           <div>
-            <Navbar title ="News Monkey" />
-            <Health />
+            <Navbar title ="News Jockey" />
+            <News key="health" country="us" pagesize="10" category="health"/>
+
           </div>
         ),
       },
@@ -62,8 +59,9 @@ export class App extends Component {
         path: "/technology",
         element: (
           <div>
-            <Navbar title ="News Monkey" />
-            <Technology />
+            <Navbar title ="News Jockey" />
+            <News key="technology" country="us" pagesize="10" category="technology"/>
+
           </div>
         ),
       },
@@ -71,7 +69,7 @@ export class App extends Component {
         path: "/about",
         element: (
           <div>
-            <Navbar title ="News Monkey" />
+            <Navbar title ="News Jockey" />
             <About />
           </div>
         ),
@@ -80,8 +78,9 @@ export class App extends Component {
         path: "/sports",
         element: (
           <div>
-            <Navbar title ="News Monkey" />
-            <Sports />
+            <Navbar title ="News Jockey" />
+            <News key="sports" country="us" pagesize="10" category="sports"/>
+
           </div>
         ),
       },
@@ -89,8 +88,9 @@ export class App extends Component {
         path: "/science",
         element: (
           <div>
-            <Navbar title ="News Monkey" />
-            <Science/>
+            <Navbar title ="News Jockey" />
+            <News key="science" country="us" pagesize="10" category="science"/>
+
           </div>
         ),
       },
@@ -98,7 +98,7 @@ export class App extends Component {
         path: "*", // Fallback route for unmatched paths
         element: (
           <div>
-            <Navbar title ="News Monkey" />
+            <Navbar title ="News Jockey" />
             <h1>Page Not Found</h1>
           </div>
         ),

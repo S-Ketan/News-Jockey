@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
-import BgOne from "../assets/WebsiteBgOne.jpeg";
+
 import Spinner from "./Spinner";
 
 const NEWS_API_KEY = import.meta.env.VITE_API_KEY;
@@ -13,11 +13,26 @@ export class News extends Component {
       articles: [],
       loading: false,
       page: 1,
+      pageSize: this.getPageSize(),
     };
   }
 
+  getPageSize = () => {
+    const width = window.innerWidth;
+    if (width < 768) {
+      return 5; // Small devices
+    } else if (width < 1024) {
+      return 10; // Medium devices
+    } else {
+      return 20; // Large devices
+    }
+  };
+
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?&category=${this.props.category}&country=${this.props.country}&apiKey=${NEWS_API_KEY}&page=1&pageSize=${this.props.pagesize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${NEWS_API_KEY}&page=1&pageSize=${this.state.pageSize}`;
+    if (this.props.category) {
+      url += `&category=${this.props.category}`;
+    }
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -29,9 +44,10 @@ export class News extends Component {
   }
 
   handlePrevClick = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?&category=${this.props.category}&country=${this.props.country}&apiKey=${NEWS_API_KEY}&page=${
-      this.state.page - 1
-    }&pageSize=${this.props.pagesize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${NEWS_API_KEY}&page=${this.state.page - 1}&pageSize=${this.state.pageSize}`;
+    if (this.props.category) {
+      url += `&category=${this.props.category}`;
+    }
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -44,12 +60,13 @@ export class News extends Component {
   };
 
   handleNextClick = async () => {
-    if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pagesize))) {
+    if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.state.pageSize))) {
       console.log("Next");
 
-      let url = `https://newsapi.org/v2/top-headlines?&category=${this.props.category}&country=${this.props.country}&apiKey=${NEWS_API_KEY}&page=${
-        this.state.page + 1
-      }&pageSize=${this.props.pagesize}`;
+      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${NEWS_API_KEY}&page=${this.state.page + 1}&pageSize=${this.state.pageSize}`;
+      if (this.props.category) {
+        url += `&category=${this.props.category}`;
+      }
       this.setState({ loading: true });
       let data = await fetch(url);
       let parsedData = await data.json();
@@ -66,47 +83,47 @@ export class News extends Component {
   render() {
     return (
       <div
-        style={{
-          backgroundImage: `url(${BgOne})`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }}
-        className="pt-6"
+      /* style={{
+        backgroundImage: `url(${BgOne})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+      }} */
+      className="pt-6 bg-[#f5f5f5]"
       >
-        <h2 className="text-3xl p-5 text-center bg-blue-300  mb-6">
-          News Monkey - Top Headlines
-        </h2>
-        {this.state.loading && <Spinner />}
-        {!this.state.loading && (
-          <div className="columns-1 md:columns-3 gap-4 space-y-4 sm:mt-20">
-            {this.state.articles.map((element) => (
-              <div className="break-inside-avoid m-auto" key={element.url}>
-                <NewsItem
-                  title={element.title ? element.title : ""}
-                  desc={element.description ? element.description : ""}
-                  img={element.urlToImage ? element.urlToImage : ""}
-                  newsUrl={element.url ? element.url : ""}
-                />
-              </div>
-            ))}
+      <h2 className="text-3xl p-5 text-center bg-gradient-to-r from-[#3498db] to-[#2ecc71] mb-6">
+         {this.props.category ? `Top Headlines in ${this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)}` : 'Top Headlines'}
+      </h2>
+      {this.state.loading && <Spinner />}
+      {!this.state.loading && (
+        <div className="columns-1 sm:columns-3 gap-4 space-y-20 sm:mt-20 sm:w-[85vw] m-auto">
+        {this.state.articles.map((element) => (
+          <div className="break-inside-avoid m-auto" key={element.url}>
+          <NewsItem
+            title={element.title ? element.title : ""}
+            desc={element.description ? element.description : ""}
+            img={element.urlToImage ? element.urlToImage : ""}
+            newsUrl={element.url ? element.url : ""}
+          />
           </div>
-        )}
-        <div className="w-[80vw] flex justify-between m-auto mt-8">
-          <button
-            disabled={this.state.page <= 1}
-            className="text-white bg-black p-4 rounded-2xl"
-            onClick={this.handlePrevClick}
-          >
-            &larr; Previous
-          </button>
-          <button
-            disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pagesize)}
-            className="text-white bg-black p-4 rounded-2xl"
-            onClick={this.handleNextClick}
-          >
-            Next &rarr;
-          </button>
+        ))}
         </div>
+      )}
+      <div className="w-[80vw] flex justify-between m-auto mt-8">
+        <button
+        disabled={this.state.page <= 1}
+        className="text-white bg-black p-4 rounded-2xl"
+        onClick={this.handlePrevClick}
+        >
+        &larr; Previous
+        </button>
+        <button
+        disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.state.pageSize)}
+        className="text-white bg-black p-4 rounded-2xl"
+        onClick={this.handleNextClick}
+        >
+        Next &rarr;
+        </button>
+      </div>
       </div>
     );
   }
